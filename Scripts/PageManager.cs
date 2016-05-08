@@ -8,7 +8,7 @@ public class PageManager : MonoBehaviour
     public float contentWait = 1;
     public Scroller header, content;
 
-    private bool contentFlushed = false;
+    private bool contentFlushed = false, preloadStarted = false, loadComplete = false;
     private AsyncOperation ao;
 
 
@@ -35,7 +35,7 @@ public class PageManager : MonoBehaviour
                 Debug.Log("Page:" + page.number + " | choice:" + page.playerChoice + "\n");
         }
 
-        // Preload 
+        // Comment to disable async loading
         StartCoroutine(Preload());
     }
 
@@ -78,8 +78,8 @@ public class PageManager : MonoBehaviour
             GameState.PushBackPreviousPage();
 
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        if (!ao.isDone)
-            ao.allowSceneActivation = true;
+        StartCoroutine(Load());
+        
     }
 
     IEnumerator Preload()
@@ -92,7 +92,9 @@ public class PageManager : MonoBehaviour
         ao = SceneManager.LoadSceneAsync(scene);
         ao.allowSceneActivation = false;
 
-        bool loadComplete = false;
+        // For Load()
+        preloadStarted = true;
+        loadComplete = false;
 
         while (!loadComplete)
         {
@@ -102,14 +104,20 @@ public class PageManager : MonoBehaviour
 
             // Loading completed
             if (ao.progress == 0.9f)
-            {
-                Debug.Log("Ready to load");
-                //if (Input.anyKeyDown)
-                //    ao.allowSceneActivation = true;
                 loadComplete = true;
-            }
 
             yield return null;
         }
+    }
+
+    IEnumerator Load()
+    {
+        if (preloadStarted)
+            while (!loadComplete)
+                yield return null;
+        else
+            StartCoroutine(Preload());
+
+        ao.allowSceneActivation = true;
     }
 }
