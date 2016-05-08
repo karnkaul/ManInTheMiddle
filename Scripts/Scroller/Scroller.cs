@@ -20,6 +20,9 @@ public class Scroller : MonoBehaviour
     private bool doubleTapCounting = false;
     private float doubleTapElapsed = 0;
 
+    [Header("Debug")]
+    public int charsPrinted = 0;
+
 	public void FlushText ()
     {
         if (!text_canvas)
@@ -50,6 +53,8 @@ public class Scroller : MonoBehaviour
             text_canvas.text += append;
 
             previous_cpf = cpf;
+
+            charsPrinted = done;
             yield return null;
         }
         completed = true;

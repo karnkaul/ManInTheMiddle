@@ -13,10 +13,19 @@ public class AdaptiveAuthor : MonoBehaviour
     [TextArea(4, 10)][SerializeField][Tooltip("If different from left")]
     private string dilemma_right;
 
+    // Auto-resize
+    [Header("Auto-resize")]
+    public float minSize;
+    public float maxSize;
+    private RectTransform self;
+    private Scroller scroller;
+
 
 	void Start ()
     {
         //PopulateScroller();
+        self = GetComponent<RectTransform>();
+        scroller = GetComponentInChildren<Scroller>();
 	}
 
     public void PopulateScroller(Choice playerChoice)
@@ -41,7 +50,8 @@ public class AdaptiveAuthor : MonoBehaviour
         GetComponentInChildren<Scroller>().content_text = content;
     }
 
-    void Update () {
-	
+    void Update ()
+    {
+        self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(scroller.charsPrinted * 3, minSize, maxSize));
 	}
 }
