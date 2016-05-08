@@ -25,13 +25,14 @@ public class GameManager : MonoBehaviour
         // First run
         if (instance == null)
         {
-            // Ready previous page for first PageManager.Start()
-            Page zero;
-            zero.number = 0;
-            zero.playerChoice = previousChoice;
+            // Not required any more, it is now a seamless loop using default constructor and GameState.Reset()
+            // Ready previous page for first PageManager.Start() 
+            //Page zero;
+            //zero.number = 0;
+            //zero.playerChoice = previousChoice;
 
-            GameState.previousPage = zero;
-            GameState.PushBackPreviousPage();
+            //GameState.previousPage = zero;
+            //GameState.PushBackPreviousPage();
             
             // Make singleton
             instance = this;

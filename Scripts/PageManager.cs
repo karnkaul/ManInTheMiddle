@@ -9,6 +9,7 @@ public class PageManager : MonoBehaviour
     public Scroller header, content;
 
     private bool contentFlushed = false;
+    private AsyncOperation ao;
 
 
     // DEBUGGING
@@ -18,6 +19,11 @@ public class PageManager : MonoBehaviour
     {
         if (header && content)
             StartCoroutine(DisplayContent());
+        
+        // Initialise
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+            GameState.Reset();
+
         GameManager.Instance.ToggleControls(false);
         GameManager.currentPM = this;
         Invoke("AutoEnableControls", GameManager.Instance.AutoEnableTimeout);
@@ -28,6 +34,9 @@ public class PageManager : MonoBehaviour
             foreach (Page page in GameState.pages)
                 Debug.Log("Page:" + page.number + " | choice:" + page.playerChoice + "\n");
         }
+
+        // Preload 
+        StartCoroutine(Preload());
     }
 
     void AutoEnableControls()
@@ -60,10 +69,47 @@ public class PageManager : MonoBehaviour
     {
         Page current;
         current.number = GameState.previousPage.number + 1;
+        Debug.Log("number:" + current.number);
         current.playerChoice = playerChoice;
         GameState.previousPage = current;
-        GameState.PushBackPreviousPage();
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        // Don't push last scene
+        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCount-1)
+            GameState.PushBackPreviousPage();
+
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (!ao.isDone)
+            ao.allowSceneActivation = true;
+    }
+
+    IEnumerator Preload()
+    {
+        ao = new AsyncOperation();
+        int scene = SceneManager.GetActiveScene().buildIndex + 1;
+        if (scene > SceneManager.sceneCount)
+            scene = 0;
+
+        ao = SceneManager.LoadSceneAsync(scene);
+        ao.allowSceneActivation = false;
+
+        bool loadComplete = false;
+
+        while (!loadComplete)
+        {
+            // [0, 0.9] > [0, 1]
+            float progress = Mathf.Clamp01(ao.progress / 0.9f);
+            Debug.Log("Loading progress: " + (progress * 100) + "%");
+
+            // Loading completed
+            if (ao.progress == 0.9f)
+            {
+                Debug.Log("Ready to load");
+                //if (Input.anyKeyDown)
+                //    ao.allowSceneActivation = true;
+                loadComplete = true;
+            }
+
+            yield return null;
+        }
     }
 }
