@@ -5,8 +5,13 @@ using Definitions;
 
 public class PageManager : MonoBehaviour
 {
+    [Header("Content")]
     public float contentWait = 1;
     public Scroller header, content;
+
+    [Header("Music")]
+    public bool autoSwapMusic = false;
+    public AudioClip swapFile;
 
     private bool contentFlushed = false, preloadStarted = false, loadComplete = false;
     private AsyncOperation ao;
@@ -14,6 +19,11 @@ public class PageManager : MonoBehaviour
 
     // DEBUGGING
     public bool _debug_delay = true;
+
+    void Awake()
+    {
+
+    }
 
 	void Start ()
     {
@@ -35,8 +45,23 @@ public class PageManager : MonoBehaviour
                 Debug.Log("Page:" + page.number + " | choice:" + page.playerChoice + "\n");
         }
 
+        // Music
+        if (autoSwapMusic && swapFile != null)
+            Invoke("SwapMusic", 1);
+
         // Comment to disable async loading
         StartCoroutine(Preload());
+    }
+
+    void SwapMusic()
+    {
+        MusicPlayer mp = FindObjectOfType<MusicPlayer>();
+        if (mp)
+        {
+            mp.enqueue = swapFile;
+            mp.Swap();
+            Debug.Log("Swapped.");
+        }
     }
 
     void AutoEnableControls()

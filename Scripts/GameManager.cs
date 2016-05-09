@@ -62,8 +62,8 @@ public class GameManager : MonoBehaviour
 
     public bool ToggleControls(bool enable)
     {
-        string doing = enable ? "Enabling" : "Disabling";
-        Debug.Log(doing + " controls.");
+        //string doing = enable ? "Enabling" : "Disabling";
+        //Debug.Log(doing + " controls.");
         controlsEnabled = enable;
         FindObjectOfType<ControlsManager>().Toggle(enable);
         return controlsEnabled;

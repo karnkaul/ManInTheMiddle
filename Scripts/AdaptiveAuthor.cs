@@ -26,6 +26,8 @@ public class AdaptiveAuthor : MonoBehaviour
         //PopulateScroller();
         self = GetComponent<RectTransform>();
         scroller = GetComponentInChildren<Scroller>();
+
+        StartCoroutine(DelayedCollider());
 	}
 
     public void PopulateScroller(Choice playerChoice)
@@ -54,4 +56,20 @@ public class AdaptiveAuthor : MonoBehaviour
     {
         self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(scroller.charsPrinted * 3, minSize, maxSize));
 	}
+
+    IEnumerator DelayedCollider()
+    {
+        Collider2D c = GetComponentInChildren<Collider2D>();
+        c.enabled = false;
+
+        float elapsed = 0;
+
+        while (elapsed < 2.0f)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        c.enabled = true;
+    }
 }
