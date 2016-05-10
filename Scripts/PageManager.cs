@@ -7,7 +7,9 @@ public class PageManager : MonoBehaviour
 {
     [Header("Content")]
     public float contentWait = 1;
-    public Scroller header, content;
+    public Scroller header;
+    public Scroller content;
+    public bool scrollHeader = true;
 
     [Header("Music")]
     public bool autoSwapMusic = false;
@@ -60,7 +62,7 @@ public class PageManager : MonoBehaviour
         {
             mp.enqueue = swapFile;
             mp.Swap();
-            Debug.Log("Swapped.");
+            Debug.Log(swapFile.name + " swapped.");
         }
     }
 
@@ -74,11 +76,14 @@ public class PageManager : MonoBehaviour
         if (_debug_delay)
             yield return new WaitForSeconds(2);
 
-        header.FlushText();
-        while (!header.Completed)
-            yield return null;
+        if (scrollHeader)
+        {
+            header.FlushText();
+            while (!header.Completed)
+                yield return null;
+            yield return new WaitForSeconds(contentWait);
+        }
 
-        yield return new WaitForSeconds(contentWait);
         content.FlushText();
 
         while (!content.Completed)
@@ -111,8 +116,10 @@ public class PageManager : MonoBehaviour
     {
         ao = new AsyncOperation();
         int scene = SceneManager.GetActiveScene().buildIndex + 1;
-        if (scene > SceneManager.sceneCount)
+        if (scene >= SceneManager.sceneCountInBuildSettings)
             scene = 0;
+
+        Debug.Log("next scene:" + scene + " scenecount:" + SceneManager.sceneCountInBuildSettings);
 
         ao = SceneManager.LoadSceneAsync(scene);
         ao.allowSceneActivation = false;

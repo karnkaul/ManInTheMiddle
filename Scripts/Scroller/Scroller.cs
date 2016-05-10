@@ -39,6 +39,10 @@ public class Scroller : MonoBehaviour
     {
         int previous_cpf = 0;
         remaining = 0;
+
+        if (content_text.Length == 0)
+            yield return new WaitForSeconds(0.1f);
+
         for (int done=0; done < content_text.Length; done += cpf)
         {
             // Rewind pointer if cpf changed at increment

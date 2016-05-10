@@ -38,7 +38,7 @@ public class AdaptiveAuthor : MonoBehaviour
         if (pageType != PageType.First)
         {
             content += (playerChoice == Choice.Left) ? reaction_left : reaction_right;
-            content += "\n\n";
+            //content += "\n\n";
         }
 
         // Special pages will have adaptive dilemmas
