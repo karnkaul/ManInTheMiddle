@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Xml.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using Definitions;
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
         
+
     }
 
 	void Start ()

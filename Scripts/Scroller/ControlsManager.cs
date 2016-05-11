@@ -17,6 +17,11 @@ public class ControlsManager : MonoBehaviour
         GameManager.Instance.PlayerChose(Choice.Right);
     }
 
+    public void Centre()
+    {
+
+    }
+
     public void Toggle(bool enable)
     {
         //Button[] buttons = GetComponentsInChildren<Button>();
