@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentContainer>
+	<Contents>
+		<Content scene = "1">
+			<reaction_left>Test</reaction_left>
+			<reaction_right>To test</reaction_right>
+			<dilemma> this scene.</dilemma>
+			<dilemma_right>
+			</dilemma_right>
+		</Content>
+	</Contents>
+</ContentContainer>

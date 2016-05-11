@@ -17,7 +17,8 @@ public class ControlsEnabler : MonoBehaviour
         // Enable controls if less than 50 chars remaining and scroll near bottom position.
         if (content.Remaining < 50 && !controlsEnabled)
         {
-            Debug.Log(this.name + " enabling controls.");
+            if (GameManager.Instance.DebugLevel >= Definitions.DebugLevel.Verbose)
+                Debug.Log(this.name + " enabling controls.");
             controlsEnabled = GameManager.Instance.ToggleControls(true);
         }
     }

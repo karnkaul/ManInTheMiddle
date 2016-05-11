@@ -5,6 +5,9 @@ using Definitions;
 
 public class PageManager : MonoBehaviour
 {
+    [Header("Scene")]
+    public int pageNumber;
+
     [Header("Content")]
     public float contentWait = 1;
     public Scroller header;
@@ -24,11 +27,14 @@ public class PageManager : MonoBehaviour
 
     void Awake()
     {
-
+        
     }
 
 	void Start ()
     {
+        if (pageNumber == 0)
+            Debug.Assert(false, "Check scene number");
+
         if (header && content)
             StartCoroutine(DisplayContent());
         
@@ -62,7 +68,9 @@ public class PageManager : MonoBehaviour
         {
             mp.enqueue = swapFile;
             mp.Swap();
-            Debug.Log(swapFile.name + " swapped.");
+
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+                Debug.Log(swapFile.name + " swapped.");
         }
     }
 
@@ -98,14 +106,14 @@ public class PageManager : MonoBehaviour
     public void LoadNext(Choice playerChoice)
     {
         Page current;
-        current.number = GameState.previousPage.number + 1;
-        Debug.Log("number:" + current.number);
+        //current.number = GameState.previousPage.number + 1;
+        current.number = pageNumber;
         current.playerChoice = playerChoice;
         GameState.previousPage = current;
 
         // Don't push last scene
-        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCount-1)
-            GameState.PushBackPreviousPage();
+        //if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCount)
+        GameState.PushBackPreviousPage();
 
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         StartCoroutine(Load());
@@ -119,7 +127,8 @@ public class PageManager : MonoBehaviour
         if (scene >= SceneManager.sceneCountInBuildSettings)
             scene = 0;
 
-        Debug.Log("next scene:" + scene + " scenecount:" + SceneManager.sceneCountInBuildSettings);
+        if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+            Debug.Log("next scene:" + scene + " scenecount:" + SceneManager.sceneCountInBuildSettings);
 
         ao = SceneManager.LoadSceneAsync(scene);
         ao.allowSceneActivation = false;
@@ -132,7 +141,9 @@ public class PageManager : MonoBehaviour
         {
             // [0, 0.9] > [0, 1]
             float progress = Mathf.Clamp01(ao.progress / 0.9f);
-            Debug.Log("Loading progress: " + (progress * 100) + "%");
+
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+                Debug.Log("Loading progress: " + (progress * 100) + "%");
 
             // Loading completed
             if (ao.progress == 0.9f)

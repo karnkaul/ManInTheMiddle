@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     private int autoEnableTimeout = 10;
     public int AutoEnableTimeout { get { return autoEnableTimeout; } }
 
+    [SerializeField]
+    private DebugLevel debugLevel = 0;
+    public DebugLevel DebugLevel { get { return debugLevel; } }
+
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
@@ -73,7 +77,9 @@ public class GameManager : MonoBehaviour
 
     public void PlayerChose(Choice playerChoice)
     {
-        Debug.Log("Player choice: " + playerChoice);
+        if (debugLevel >= DebugLevel.Verbose)
+            Debug.Log("Player choice: " + playerChoice);
+
         if (currentPM)
             currentPM.LoadNext(playerChoice);
     }
