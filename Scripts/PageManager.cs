@@ -7,6 +7,7 @@ public class PageManager : MonoBehaviour
 {
     [Header("Scene")]
     public int pageNumber;
+    public bool checkpoint = false;
 
     [Header("Content")]
     public float contentWait = 1;
@@ -27,7 +28,8 @@ public class PageManager : MonoBehaviour
 
     void Awake()
     {
-        
+        if (checkpoint)
+            Persistor.Save(SceneManager.GetActiveScene().name);
     }
 
 	void Start ()

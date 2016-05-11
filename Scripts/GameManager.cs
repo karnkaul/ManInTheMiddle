@@ -18,6 +18,10 @@ public class GameManager : MonoBehaviour
     private DebugLevel debugLevel = 0;
     public DebugLevel DebugLevel { get { return debugLevel; } }
 
+    [SerializeField]
+    private bool loadCheckpoint = false;
+    public bool LoadCheckpoint { get { return loadCheckpoint; } }
+
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
@@ -45,13 +49,20 @@ public class GameManager : MonoBehaviour
         if (instance != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
-        
 
+        if (loadCheckpoint)
+        {
+            Checkpoint checkpoint = Persistor.Load();
+            if (checkpoint != null)
+                SceneManager.LoadScene(checkpoint.sceneName);
+            else
+                Debug.Assert(false, "Checkpoint loading failed.");
+        }
     }
 
 	void Start ()
     {
-        
+        // Load last checkpoint
 	}
 	
 	void Update ()
@@ -68,8 +79,6 @@ public class GameManager : MonoBehaviour
 
     public bool ToggleControls(bool enable)
     {
-        //string doing = enable ? "Enabling" : "Disabling";
-        //Debug.Log(doing + " controls.");
         controlsEnabled = enable;
         FindObjectOfType<ControlsManager>().Toggle(enable);
         return controlsEnabled;
@@ -82,5 +91,11 @@ public class GameManager : MonoBehaviour
 
         if (currentPM)
             currentPM.LoadNext(playerChoice);
+    }
+
+    public void Centre()
+    {
+        // Obliterate saves
+        Persistor.Clear();
     }
 }
