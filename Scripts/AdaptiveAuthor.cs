@@ -17,6 +17,9 @@ public class AdaptiveAuthor : MonoBehaviour
     [Header("Auto-resize")]
     public float minSize;
     public float maxSize;
+    [Range(1, 5)]
+    public float expansionRate = 2.5f;
+
     private RectTransform self;
     private Scroller scroller;
 
@@ -54,7 +57,7 @@ public class AdaptiveAuthor : MonoBehaviour
 
     void Update ()
     {
-        self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(scroller.charsPrinted * 3, minSize, maxSize));
+        self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(scroller.charsPrinted * expansionRate, minSize, maxSize));
 	}
 
     IEnumerator DelayedCollider()
