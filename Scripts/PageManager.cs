@@ -19,7 +19,7 @@ public class PageManager : MonoBehaviour
     public bool autoSwapMusic = false;
     public AudioClip swapFile;
 
-    private bool contentFlushed = false, preloadStarted = false, loadComplete = false;
+    private bool contentFlushed = false, preloadStarted = false, loadComplete = false, lastScene = false;
     private AsyncOperation ao;
 
 
@@ -39,10 +39,11 @@ public class PageManager : MonoBehaviour
 
         if (header && content)
             StartCoroutine(DisplayContent());
-        
-        // Initialise
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-            GameState.Reset();
+
+        // Initialise : messing with Persistor. Using manual reset for now (GameManager)
+        //if (SceneManager.GetActiveScene().buildIndex == 0)
+        //if (pageNumber == 1)
+        //    GameState.Reset();
 
         GameManager.Instance.ToggleControls(false);
         GameManager.currentPM = this;
@@ -60,7 +61,7 @@ public class PageManager : MonoBehaviour
             Invoke("SwapMusic", 1);
 
         // Comment to disable async loading
-        StartCoroutine(Preload());
+        //StartCoroutine(Preload());
     }
 
     void SwapMusic()
@@ -122,47 +123,80 @@ public class PageManager : MonoBehaviour
         
     }
 
+    public void StartPreloading()
+    {
+        StartCoroutine(Preload());
+    }
+    
     IEnumerator Preload()
     {
         ao = new AsyncOperation();
         int scene = SceneManager.GetActiveScene().buildIndex + 1;
-        if (scene >= SceneManager.sceneCountInBuildSettings)
-            scene = 0;
+
+        // Loop back
+        //if (scene >= SceneManager.sceneCountInBuildSettings)
+        //    scene = 0;
+
+        int sceneCount = SceneManager.sceneCountInBuildSettings;
 
         if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
-            Debug.Log("next scene:" + scene + " scenecount:" + SceneManager.sceneCountInBuildSettings);
+            Debug.Log("next scene:" + scene + " scenecount:" + sceneCount);
 
-        ao = SceneManager.LoadSceneAsync(scene);
-        ao.allowSceneActivation = false;
-
-        // For Load()
-        preloadStarted = true;
-        loadComplete = false;
-
-        while (!loadComplete)
+        if (scene < sceneCount)
         {
-            // [0, 0.9] > [0, 1]
-            float progress = Mathf.Clamp01(ao.progress / 0.9f);
+            ao = SceneManager.LoadSceneAsync(scene);
+            ao.allowSceneActivation = false;
 
-            if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
-                Debug.Log("Loading progress: " + (progress * 100) + "%");
+            // For Load()
+            preloadStarted = true;
+            loadComplete = false;
 
-            // Loading completed
-            if (ao.progress == 0.9f)
-                loadComplete = true;
+            while (!loadComplete)
+            {
+                // [0, 0.9] > [0, 1]
+                float progress = Mathf.Clamp01(ao.progress / 0.9f);
 
-            yield return null;
+                if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+                    Debug.Log("Loading progress: " + (progress * 100) + "%");
+
+                // Loading completed
+                if (ao.progress == 0.9f)
+                    loadComplete = true;
+
+                yield return null;
+            }
+        }
+
+        else
+        {
+            lastScene = true;
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+                Debug.Log("Preload Coroutine: This is the last scene.");
         }
     }
 
     IEnumerator Load()
     {
-        if (preloadStarted)
-            while (!loadComplete)
-                yield return null;
-        else
-            StartCoroutine(Preload());
+        Debug.Log("last scene? " + lastScene);
+        if (!lastScene)
+        {
+            if (preloadStarted)
+                while (!loadComplete)
+                    yield return null;
+            else
+                StartCoroutine(Preload());
 
-        ao.allowSceneActivation = true;
+            ao.allowSceneActivation = true;
+        }
+        else
+        {
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+                Debug.Log("Nothing to load.");
+        }   
+    }
+
+    public void UnloadAll()
+    {
+        
     }
 }

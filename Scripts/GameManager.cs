@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     private bool loadCheckpoint = false;
     public bool LoadCheckpoint { get { return loadCheckpoint; } }
 
+    [SerializeField]
+    private bool resetGameState = false;
+
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
@@ -50,20 +53,34 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
 
+
+    }
+
+	void Start ()
+    {
+        // Load last checkpoint
         if (loadCheckpoint)
         {
             Checkpoint checkpoint = Persistor.Load();
             if (checkpoint != null)
                 SceneManager.LoadScene(checkpoint.sceneName);
             else
-                Debug.Assert(false, "Checkpoint loading failed.");
+                Debug.Log("Checkpoint file not found.");
         }
     }
 
-	void Start ()
+    void OnLevelWasLoaded(int level)
     {
-        // Load last checkpoint
-	}
+        StartCoroutine(PMPreload());
+    }
+
+    IEnumerator PMPreload()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (debugLevel >= DebugLevel.Notify)
+            Debug.Log(currentPM.name + " has started preloading.");
+        currentPM.StartPreloading();
+    }
 	
 	void Update ()
     {
@@ -74,6 +91,12 @@ public class GameManager : MonoBehaviour
 #else
             Application.Quit();
 #endif
+        }
+
+        if (resetGameState)
+        {
+            GameState.Reset();
+            resetGameState = false;
         }
 	}
 
