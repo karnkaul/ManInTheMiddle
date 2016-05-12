@@ -9,7 +9,8 @@ public class Scroller : MonoBehaviour
     [Range(0.1f, 2.0f)]
     public float doubleTapTimeout = 0.5f;
 
-    public int charsPerFrame = 1, speedFactor = 10;
+    [SerializeField]
+    private int charsPerFrame = 1, speedFactor = 10;
     public Text text_canvas;
 
     private int cpf, remaining;

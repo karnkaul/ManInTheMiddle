@@ -49,7 +49,8 @@ public class PageManager : MonoBehaviour
         GameManager.currentPM = this;
 
         Invoke("AutoEnableControls", GameManager.Instance.AutoEnableTimeout);
-        FindObjectOfType<AdaptiveAuthor>().PopulateScroller(GameState.previousPage.playerChoice);
+        //FindObjectOfType<AdaptiveAuthor>().PopulateScroller(GameState.previousPage.playerChoice);
+        FindObjectOfType<Author>().PopulateScroller(GameState.previousPage.playerChoice);
 
         if (_debug_delay)
         {
