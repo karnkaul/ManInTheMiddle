@@ -47,6 +47,7 @@ public class PageManager : MonoBehaviour
 
         GameManager.Instance.ToggleControls(false);
         GameManager.currentPM = this;
+
         Invoke("AutoEnableControls", GameManager.Instance.AutoEnableTimeout);
         FindObjectOfType<AdaptiveAuthor>().PopulateScroller(GameState.previousPage.playerChoice);
 
@@ -60,8 +61,6 @@ public class PageManager : MonoBehaviour
         if (autoSwapMusic && swapFile != null)
             Invoke("SwapMusic", 1);
 
-        // Comment to disable async loading
-        //StartCoroutine(Preload());
     }
 
     void SwapMusic()
@@ -130,12 +129,11 @@ public class PageManager : MonoBehaviour
     
     IEnumerator Preload()
     {
+        if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+            Debug.Log(name + pageNumber + " has started preloading.");
+
         ao = new AsyncOperation();
         int scene = SceneManager.GetActiveScene().buildIndex + 1;
-
-        // Loop back
-        //if (scene >= SceneManager.sceneCountInBuildSettings)
-        //    scene = 0;
 
         int sceneCount = SceneManager.sceneCountInBuildSettings;
 
@@ -165,6 +163,9 @@ public class PageManager : MonoBehaviour
 
                 yield return null;
             }
+
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+                Debug.Log(name + pageNumber + " has finished preloading.");
         }
 
         else
@@ -177,26 +178,31 @@ public class PageManager : MonoBehaviour
 
     IEnumerator Load()
     {
-        Debug.Log("last scene? " + lastScene);
         if (!lastScene)
         {
             if (preloadStarted)
+            {
                 while (!loadComplete)
                     yield return null;
-            else
-                StartCoroutine(Preload());
+                ao.allowSceneActivation = true;
+            }
 
-            ao.allowSceneActivation = true;
+            else
+            {
+                if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+                    Debug.Log("Scene not pre-loaded, forcing.");
+
+                // Too messy to restart Load() after Preload() completes
+                //StartCoroutine(Preload());
+
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            }
         }
+
         else
         {
             if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
-                Debug.Log("Nothing to load.");
+                Debug.Log("No more scenes to load.");
         }   
-    }
-
-    public void UnloadAll()
-    {
-        
     }
 }

@@ -77,8 +77,6 @@ public class GameManager : MonoBehaviour
     IEnumerator PMPreload()
     {
         yield return new WaitForSeconds(0.5f);
-        if (debugLevel >= DebugLevel.Notify)
-            Debug.Log(currentPM.name + " has started preloading.");
         currentPM.StartPreloading();
     }
 	

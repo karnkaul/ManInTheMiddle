@@ -33,13 +33,14 @@ namespace Definitions
 
         public override string ToString()
         {
-            return "name: " + sceneName + ", prev: [" + previousPage.number + "," + previousPage.playerChoice + "]";
+            return "<b>{ " + sceneName + ": [" + previousPage.number + ", " + previousPage.playerChoice + "] }</b>";
         }
     }
 
     public static class Persistor
     {
-        static string path = Application.persistentDataPath + "/checkpoint.sav";
+        static string _path = (Application.platform == RuntimePlatform.WindowsEditor) ? Application.dataPath : Application.persistentDataPath;
+        static string path = _path + "/checkpoint.sav";
 
         public static void Save(string sceneName)
         {
@@ -49,12 +50,7 @@ namespace Definitions
             bf.Serialize(file, checkpoint);
             file.Close();
 
-            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
-            {
-                Debug.Log("Checkpoint " + checkpoint + " saved.");
-                foreach (Page page in GameState.pages)
-                    Debug.Log(page.number + " " + page.playerChoice + " saved.");
-            }
+            Log(checkpoint, "saved");
         }
 
         public static Checkpoint Load()
@@ -71,12 +67,8 @@ namespace Definitions
 
                 file.Close();
 
-                if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
-                {
-                    Debug.Log("Checkpoint " + checkpoint + " loaded.");
-                    foreach (Page page in checkpoint.allPages)
-                        Debug.Log(page.number + " choice: " + page.playerChoice);
-                }
+                Log(checkpoint, "loaded");
+
                 return checkpoint;
             }
             return null;
@@ -93,6 +85,16 @@ namespace Definitions
                 return;
             }
             Debug.Assert(false, "No save file found.");
+        }
+
+        static void Log(Checkpoint checkpoint, string action)
+        {
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+                Debug.Log("Checkpoint " + checkpoint + " " + action + ".");
+
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+                foreach (Page page in checkpoint.allPages)
+                    Debug.Log(page.number + " choice: " + page.playerChoice);
         }
     }
 
