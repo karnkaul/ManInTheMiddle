@@ -8,7 +8,14 @@ using Definitions;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
+    [Header("Previous Page")]
+    [Tooltip("Will only work if Load Checkpoint is false")]
     private Choice previousChoice = Choice.None;
+
+    [SerializeField]
+    [Tooltip("Deselect to control previous page's choices via above")]
+    private bool loadCheckpoint = false;
+    public bool LoadCheckpoint { get { return loadCheckpoint; } }
 
     [SerializeField]
     private int autoEnableTimeout = 10;
@@ -18,12 +25,8 @@ public class GameManager : MonoBehaviour
     private DebugLevel debugLevel = 0;
     public DebugLevel DebugLevel { get { return debugLevel; } }
 
-    [SerializeField]
-    private bool loadCheckpoint = false;
-    public bool LoadCheckpoint { get { return loadCheckpoint; } }
-
-    [SerializeField]
-    private bool resetGameState = false;
+    //[SerializeField]
+    //private bool resetGameState = false;
 
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
@@ -38,13 +41,15 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             // Ready previous page for first PageManager.Start() 
-            Page zero;
-            zero.number = 0;
-            zero.playerChoice = previousChoice;
+            if (!LoadCheckpoint)
+            {
+                Page zero;
+                zero.number = 0;
+                zero.playerChoice = previousChoice;
 
-            GameState.previousPage = zero;
-            GameState.PushBackPreviousPage();
-            
+                GameState.previousPage = zero;
+                GameState.PushBackPreviousPage();
+            }
             // Make singleton
             instance = this;
         }
@@ -90,11 +95,11 @@ public class GameManager : MonoBehaviour
 #endif
         }
 
-        if (resetGameState)
-        {
-            GameState.Reset();
-            resetGameState = false;
-        }
+        //if (resetGameState)
+        //{
+        //    GameState.Reset();
+        //    resetGameState = false;
+        //}
 	}
 
     public bool ToggleControls(bool enable)
