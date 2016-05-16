@@ -104,19 +104,11 @@ namespace Definitions
         public static List<Page> pages = new List<Page>();
         public static Page previousPage;
 
-        public static bool PushBackPreviousPage()
+        public static void PushBackPreviousPage()
         {
-            if (previousPage.number == firstPageNumber || (pages.Count > 0 && previousPage.number != pages[pages.Count - 1].number))
-            {
-                pages.Add(previousPage);
-                if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
-                    Debug.Log("Page " + previousPage.number + " | playerChoice = " + previousPage.playerChoice + "\nRecorded and pushed to stack.");
-                return true;
-            }
-
-            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
-                Debug.Log("Ignoring push back: this is not the first/next page.");
-            return false;          
+            pages.Add(previousPage);
+            if (GameManager.Instance && GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+                Debug.Log("Page " + previousPage.number + " | playerChoice = " + previousPage.playerChoice + "\nRecorded and pushed to stack.");
         }
 
         public static void Reset()

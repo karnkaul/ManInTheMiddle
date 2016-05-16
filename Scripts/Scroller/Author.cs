@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using Definitions;
 
@@ -8,6 +9,14 @@ public class Author : MonoBehaviour
     [Tooltip("Standard: shared dilemma.\nSpecial: separate dilemmas\nFirst: no reactions.")]
     public PageType pageType;
 
+    [Header("Content")]
+    public bool scrollHeader = false;
+    [SerializeField]
+    [TextArea(2, 4)]
+    private string header;
+    [SerializeField]
+    [TextArea(4, 10)]
+    private string intro;
     [TextArea(4, 10)]
     [SerializeField]
     private string reaction_left, reaction_right, dilemma;
@@ -17,18 +26,27 @@ public class Author : MonoBehaviour
     private string dilemma_right;
 
     [SerializeField]
-    private Scroller contentScroller;
+    private Scroller headerScroller, contentScroller;
 
     void Start()
     {
         if (!contentScroller)
-            contentScroller = GetComponentInChildren<Scroller>();
-        Debug.Assert(contentScroller, "Set Scroller reference!");
+            contentScroller = GameObject.Find("Content Text").GetComponentInChildren<Scroller>();
+        if (!headerScroller)
+            headerScroller = GameObject.Find("Header").GetComponent<Scroller>();
+        Debug.Assert((contentScroller && headerScroller), "Set Scroller reference!");
     }
 
     public void PopulateScroller(Choice playerChoice)
     {
-        string content = "";
+        // Header
+        if (!scrollHeader)
+            headerScroller.GetComponent<Text>().text = header;
+        else
+            headerScroller.content_text = header;
+
+        // Content
+        string content = intro;
 
         // First page won't contain reactions
         if (pageType != PageType.First)

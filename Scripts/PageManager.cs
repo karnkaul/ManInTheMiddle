@@ -13,7 +13,6 @@ public class PageManager : MonoBehaviour
     public float contentWait = 1;
     public Scroller header;
     public Scroller content;
-    public bool scrollHeader = true;
 
     [Header("Music")]
     public bool autoSwapMusic = false;
@@ -37,6 +36,8 @@ public class PageManager : MonoBehaviour
         if (pageNumber == 0)
             Debug.Assert(false, "Check scene number");
 
+        FindObjectOfType<Author>().PopulateScroller(GameState.previousPage.playerChoice);
+
         if (header && content)
             StartCoroutine(DisplayContent());
 
@@ -50,7 +51,6 @@ public class PageManager : MonoBehaviour
 
         Invoke("AutoEnableControls", GameManager.Instance.AutoEnableTimeout);
         //FindObjectOfType<AdaptiveAuthor>().PopulateScroller(GameState.previousPage.playerChoice);
-        FindObjectOfType<Author>().PopulateScroller(GameState.previousPage.playerChoice);
 
         if (_debug_delay)
         {
@@ -86,8 +86,10 @@ public class PageManager : MonoBehaviour
     {
         if (_debug_delay)
             yield return new WaitForSeconds(2);
+        else
+            yield return new WaitForSeconds(0.1f);
 
-        if (scrollHeader)
+        if (FindObjectOfType<Author>().scrollHeader)
         {
             header.FlushText();
             while (!header.Completed)
