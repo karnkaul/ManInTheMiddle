@@ -6,16 +6,20 @@ using Definitions;
 public class PageManager : MonoBehaviour
 {
     [Header("Scene")]
-    public int pageNumber;
-    public bool checkpoint = false;
+    [SerializeField]
+    private int pageNumber;
+    [SerializeField]
+    private bool checkpoint = false;
 
     [Header("Content")]
-    public float contentWait = 1;
+    [SerializeField]
+    private float contentWait = 1;
     public Scroller header;
     public Scroller content;
 
     [Header("Music")]
-    public bool autoSwapMusic = false;
+    [SerializeField]
+    private bool autoSwapMusic = false;
     public AudioClip swapFile;
 
     private bool contentFlushed = false, preloadStarted = false, loadComplete = false, lastScene = false;
@@ -49,7 +53,7 @@ public class PageManager : MonoBehaviour
         GameManager.Instance.ToggleControls(false);
         GameManager.currentPM = this;
 
-        Invoke("AutoEnableControls", GameManager.Instance.AutoEnableTimeout);
+        Invoke("AutoEnableControls", GameManager.Instance.Autoenable);
         //FindObjectOfType<AdaptiveAuthor>().PopulateScroller(GameState.previousPage.playerChoice);
 
         if (_debug_delay)
@@ -104,6 +108,11 @@ public class PageManager : MonoBehaviour
 
         contentFlushed = true;
 
+        GameManager.Instance.ToggleControls(true);
+
+        if (GameManager.Instance.InterfaceControl)
+            GameManager.Instance.ToggleControls(true);
+
         if (Callback != null)
             Callback();
 	}
@@ -156,9 +165,12 @@ public class PageManager : MonoBehaviour
             {
                 // [0, 0.9] > [0, 1]
                 float progress = Mathf.Clamp01(ao.progress / 0.9f);
+                float prev_frame_progress = -1;
 
-                if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+                if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose && prev_frame_progress != progress)
                     Debug.Log("Loading progress: " + (progress * 100) + "%");
+
+                prev_frame_progress = progress;
 
                 // Loading completed
                 if (ao.progress == 0.9f)

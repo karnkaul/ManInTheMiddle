@@ -17,10 +17,18 @@ public class GameManager : MonoBehaviour
     private bool loadCheckpoint = false;
     public bool LoadCheckpoint { get { return loadCheckpoint; } }
 
+    [Header("Controls")]
     [SerializeField]
-    private int autoEnableTimeout = 10;
-    public int AutoEnableTimeout { get { return autoEnableTimeout; } }
+    [Tooltip("If checked, interface will enable controls once flushing text is completed")]
+    private bool interfaceControl = true;
+    public bool InterfaceControl { get { return interfaceControl; } }
 
+    [SerializeField]
+    [Tooltip("Timeout to force-enable controls")]
+    private int autoEnable = 10;
+    public int Autoenable { get { return autoEnable; } }
+
+    [Header("Debug")]
     [SerializeField]
     private DebugLevel debugLevel = 0;
     public DebugLevel DebugLevel { get { return debugLevel; } }
