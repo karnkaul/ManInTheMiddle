@@ -10,7 +10,13 @@ public class PageManager : MonoBehaviour
     private int pageNumber;
     [SerializeField]
     private bool checkpoint = false;
+    [SerializeField] 
+    [Tooltip("Use this to branch to a different Line. Provide scene names.")]
+    private bool branch = false;
+    [SerializeField]
+    private string LineA, LineB;
 
+    
     [Header("Content")]
     [SerializeField]
     private float contentWait = 1;
@@ -35,10 +41,13 @@ public class PageManager : MonoBehaviour
             Persistor.Save(SceneManager.GetActiveScene().name);
     }
 
-	void Start ()
+	protected virtual void Start ()
     {
         if (pageNumber == 0)
             Debug.Assert(false, "Check scene number");
+
+        else if (pageNumber == -1)
+            Debug.Log("Template scene.");
 
         FindObjectOfType<Author>().PopulateScroller(GameState.previousPage.playerChoice);
 
@@ -136,7 +145,10 @@ public class PageManager : MonoBehaviour
 
     public void StartPreloading()
     {
-        StartCoroutine(Preload());
+        if (!branch)
+            StartCoroutine(Preload());
+        else if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+            Debug.Log("Branch page detected, skipping preloading.");
     }
     
     IEnumerator Preload()
@@ -195,7 +207,13 @@ public class PageManager : MonoBehaviour
     {
         if (!lastScene)
         {
-            if (preloadStarted)
+            if (branch)
+            {
+                string lineToLoad = (GameState.previousPage.playerChoice == Choice.Left) ? LineA : LineB;
+                SceneManager.LoadScene(lineToLoad);
+            }
+
+            else if (preloadStarted)
             {
                 while (!loadComplete)
                     yield return null;
@@ -209,7 +227,6 @@ public class PageManager : MonoBehaviour
 
                 // Too messy to restart Load() after Preload() completes
                 //StartCoroutine(Preload());
-
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
         }

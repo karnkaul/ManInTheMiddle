@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
             else
                 Debug.Log("Checkpoint file not found.");
         }
+
+        StartCoroutine(PMPreload());
     }
 
     void OnLevelWasLoaded(int level)
@@ -88,6 +90,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator PMPreload()
     {
+        if (debugLevel >= DebugLevel.Notify)
+            Debug.Log("GM requesting PM to start preloading in 0.5s");
         yield return new WaitForSeconds(0.5f);
         currentPM.StartPreloading();
     }
