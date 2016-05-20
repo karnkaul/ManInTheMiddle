@@ -40,6 +40,10 @@ public class PageManager : MonoBehaviour
     {
         if (checkpoint)
             Persistor.Save(SceneManager.GetActiveScene().name);
+
+        Author author = FindObjectOfType<Author>();
+        if (author.pageNumber > 0)
+            pageNumber = author.pageNumber;
     }
 
 	void Start ()

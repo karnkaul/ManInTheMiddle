@@ -11,6 +11,7 @@ public class Author : MonoBehaviour
 
     [Header("Content")]
     public bool scrollHeader = false;
+    public int pageNumber = 0;
     [SerializeField]
     [TextArea(2, 4)]
     private string header;
