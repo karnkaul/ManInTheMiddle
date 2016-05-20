@@ -6,9 +6,10 @@ using UnityEngine.SceneManagement;
 public class Loader : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("Use this to branch to a different Line. Provide scene names.")]
+    [Tooltip("Use this to branch to a different Line. Provide scene names")]
     private bool branch = false;
     [SerializeField]
+    [Tooltip("Provide identical scene names for a Convergent page")]
     private string LineA, LineB;
 
     private bool preloadStarted = false, loadComplete = false, lastScene = false;
