@@ -38,7 +38,7 @@ public class Scroller : MonoBehaviour
     // Flush content_text to canvas
 	IEnumerator Flush ()
     {
-        int previous_cpf = 0;
+        int previous_cpf = 0, wordsInLine = 0;
         remaining = 0;
 
         if (content_text.Length == 0)
@@ -55,6 +55,7 @@ public class Scroller : MonoBehaviour
                 break;
 
             string append = content_text.Substring(done, (remaining > cpf) ? cpf: remaining);
+
             text_canvas.text += append;
 
             previous_cpf = cpf;

@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class Loader : MonoBehaviour
 {
+    // Async loading not working for mobile
+    [SerializeField]
+    private bool useAsync = false;
+
     [SerializeField]
     [Tooltip("Use this to branch to a different Line. Provide scene names")]
     private bool branch = false;
@@ -44,10 +48,18 @@ public class Loader : MonoBehaviour
 
     public void StartPreloading()
     {
-        if (!branch)
+        if (!branch && useAsync)
             StartCoroutine(Preload());
-        else if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
-            Debug.Log("Branch page detected, skipping preloading.");
+        else
+        {
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+            {
+                if (branch)
+                    Debug.Log("Branch page detected, skipping preloading.");
+                else 
+                    Debug.Log("Use Async disabled, skipping preloading.");
+            }       
+        }
     }
 
     IEnumerator Preload()
