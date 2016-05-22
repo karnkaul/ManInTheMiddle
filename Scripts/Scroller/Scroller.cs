@@ -15,6 +15,7 @@ public class Scroller : MonoBehaviour
 
     private int cpf, remaining;
     public int Remaining { get { return remaining; } }
+    public int CPF { get { return cpf; } }
     private bool completed = false;
     public bool Completed { get { return completed; } }
 

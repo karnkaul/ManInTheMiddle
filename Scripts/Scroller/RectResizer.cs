@@ -6,7 +6,7 @@ public class RectResizer : MonoBehaviour
     // Auto-resize
     [Header("Auto-resize")]
     public float minSize;
-    public float maxSize;
+    public float maxSize, offset;
     [Range(1, 5)]
     public float expansionRate = 2.5f;
 
@@ -19,6 +19,12 @@ public class RectResizer : MonoBehaviour
         scroller = GetComponentInChildren<Scroller>();
 
         StartCoroutine(DelayedCollider());
+
+        if (!FindObjectOfType<Author>().showImage)
+        {
+            offset = 0;
+            GetComponentInChildren<UnityEngine.UI.Image>().enabled = false;
+        }
     }
 
     IEnumerator DelayedCollider()
@@ -39,6 +45,6 @@ public class RectResizer : MonoBehaviour
 
     void Update()
     {
-        self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(scroller.charsPrinted * expansionRate, minSize, maxSize));
+        self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp((scroller.charsPrinted * expansionRate) + offset, minSize, maxSize));
     }
 }

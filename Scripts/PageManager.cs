@@ -44,6 +44,9 @@ public class PageManager : MonoBehaviour
         Author author = FindObjectOfType<Author>();
         if (author.pageNumber > 0)
             pageNumber = author.pageNumber;
+
+        if (!author.showImage)
+            contentWait = 0;
     }
 
 	void Start ()
