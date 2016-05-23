@@ -39,7 +39,7 @@ public class Scroller : MonoBehaviour
     // Flush content_text to canvas
 	IEnumerator Flush ()
     {
-        int previous_cpf = 0, wordsInLine = 0;
+        int previous_cpf = 0;
         remaining = 0;
 
         if (content_text.Length == 0)

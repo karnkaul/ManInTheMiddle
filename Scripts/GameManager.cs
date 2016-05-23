@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
             }
             // Make singleton
             instance = this;
+
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
         if (instance != this)
             Destroy(gameObject);

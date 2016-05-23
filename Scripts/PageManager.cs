@@ -68,6 +68,8 @@ public class PageManager : MonoBehaviour
         //    GameState.Reset();
 
         GameManager.Instance.ToggleControls(false);
+        if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+            Debug.Log("Interface disabling controls.");
         GameManager.currentPM = this;
 
         Invoke("AutoEnableControls", GameManager.Instance.Autoenable);
@@ -101,6 +103,8 @@ public class PageManager : MonoBehaviour
     void AutoEnableControls()
     {
         GameManager.Instance.ToggleControls(true);
+        if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+            Debug.Log("Auto enabling controls (" + GameManager.Instance.Autoenable + " s passed.");
     }
 	
 	IEnumerator DisplayContent (Definitions.Void Callback = null)
@@ -125,10 +129,14 @@ public class PageManager : MonoBehaviour
 
         contentFlushed = true;
 
-        GameManager.Instance.ToggleControls(true);
+        yield return new WaitForSeconds(1);
 
         if (GameManager.Instance.InterfaceControl)
+        {
             GameManager.Instance.ToggleControls(true);
+            if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+                Debug.Log("Text flushed, PM enabling controls.");
+        }
 
         if (Callback != null)
             Callback();
