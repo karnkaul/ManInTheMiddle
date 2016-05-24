@@ -55,7 +55,7 @@ public class Loader : MonoBehaviour
             if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
             {
                 if (branch)
-                    Debug.Log("Branch page detected, skipping preloading.");
+                    Debug.Log("Branch detected.");
                 else 
                     Debug.Log("Use Async disabled, skipping preloading.");
             }       

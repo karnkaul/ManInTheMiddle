@@ -11,7 +11,7 @@ public class Author : MonoBehaviour
 
     [Header("Content")]
     public bool scrollHeader = false;
-    public bool showImage = true;
+    public bool showImage = true, useScroller = false;
     public int pageNumber = 0;
     [SerializeField]
     [TextArea(2, 4)]
@@ -29,6 +29,8 @@ public class Author : MonoBehaviour
 
     [SerializeField]
     private Scroller headerScroller, contentScroller;
+    [SerializeField]
+    private Text headerText, contentText;
 
     void Start()
     {
@@ -36,16 +38,16 @@ public class Author : MonoBehaviour
             contentScroller = GameObject.Find("Content Text").GetComponentInChildren<Scroller>();
         if (!headerScroller)
             headerScroller = GameObject.Find("Header").GetComponent<Scroller>();
-        Debug.Assert((contentScroller && headerScroller), "Set Scroller reference!");
+        Debug.Assert((headerScroller), "Set Scroller reference!");
     }
 
     public void PopulateScroller(Choice playerChoice)
     {
         // Header
-        if (!scrollHeader)
-            headerScroller.GetComponent<Text>().text = header;
-        else
+        if (scrollHeader)
             headerScroller.content_text = header;
+        else
+            headerText.text = header;
 
         // Content
         string content = (FindObjectOfType<Author>().showImage) ? "\n\n\n\n\n\n\n\n" : "";
@@ -67,6 +69,9 @@ public class Author : MonoBehaviour
         else
             content += dilemma;
 
-        contentScroller.content_text = content;
+        if (useScroller)
+            contentScroller.content_text = content;
+        else
+            contentText.text = content;
     }
 }

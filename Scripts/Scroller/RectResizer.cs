@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class RectResizer : MonoBehaviour
@@ -8,10 +9,14 @@ public class RectResizer : MonoBehaviour
     public float minSize;
     public float maxSize, offset;
     [Range(1, 5)]
-    public float expansionRate = 2.5f, initWait;
+    public float expansionRate = 2.5f, colliderWait = 4;
+    public float initWait;
+    public float runFor = 10;
+    public bool useScroller = false;
 
     private RectTransform self;
     private Scroller scroller;
+    private Text contentText;
 
     void Start()
     {
@@ -36,7 +41,7 @@ public class RectResizer : MonoBehaviour
 
         float elapsed = 0;
 
-        while (elapsed < 2.0f)
+        while (elapsed < colliderWait)
         {
             elapsed += Time.deltaTime;
             yield return null;
@@ -48,10 +53,22 @@ public class RectResizer : MonoBehaviour
     IEnumerator Expand()
     {
         yield return new WaitForSeconds(initWait);
-        while (!scroller.Completed)
+
+        if (!useScroller)
         {
-            self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp((scroller.charsPrinted * expansionRate) + offset, minSize, maxSize));
+            contentText = GetComponentInChildren<Text>();
+            maxSize =  (contentText.text.Length * 4) + offset;
+            if (maxSize < minSize) maxSize = minSize;
+        }
+
+        float elapsed = 0;
+
+        while (elapsed <= runFor)
+        {
+            float newSize = useScroller ? scroller.charsPrinted * expansionRate : elapsed * expansionRate * 100;
+            self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(newSize + offset, minSize, maxSize));
             yield return null;
+            elapsed += Time.deltaTime;
         }
     }
 }

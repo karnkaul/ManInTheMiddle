@@ -122,21 +122,21 @@ public class PageManager : MonoBehaviour
             yield return new WaitForSeconds(contentWait);
         }
 
-        content.FlushText();
+        //content.FlushText();
 
-        while (!content.Completed)
-            yield return null;
+        //while (!content.Completed)
+        //    yield return null;
 
-        contentFlushed = true;
+        //contentFlushed = true;
 
         yield return new WaitForSeconds(1);
 
-        if (GameManager.Instance.InterfaceControl)
-        {
-            GameManager.Instance.ToggleControls(true);
-            if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
-                Debug.Log("Text flushed, PM enabling controls.");
-        }
+        //if (GameManager.Instance.InterfaceControl)
+        //{
+        //    GameManager.Instance.ToggleControls(true);
+        //    if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+        //        Debug.Log("Text flushed, PM enabling controls.");
+        //}
 
         if (Callback != null)
             Callback();

@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("If checked, interface will enable controls once flushing text is completed")]
     private bool interfaceControl = true;
     public bool InterfaceControl { get { return interfaceControl; } }
+    [SerializeField]
+    private float timeScaler = 3;
+    public float TimeScaler { get { return timeScaler; } }
 
     [SerializeField]
     [Tooltip("Timeout to force-enable controls")]
