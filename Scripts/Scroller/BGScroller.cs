@@ -6,6 +6,8 @@ public class BGScroller : MonoBehaviour
     [SerializeField]
     private float initWait = 1, shrinkSpeed = 1;
 
+    private float buffer;
+
 	IEnumerator Start ()
     {
         yield return new WaitForSeconds(initWait);
