@@ -9,7 +9,7 @@ public class RectResizer : MonoBehaviour
     public float minSize;
     public float maxSize, offset;
     [Range(1, 5)]
-    public float expansionRate = 2.5f, colliderWait = 4;
+    public float expansionRate = 2.5f, colliderWait = 4, buffer;
     public float initWait;
     public float runFor = 10;
     public bool useScroller = false;
@@ -68,7 +68,8 @@ public class RectResizer : MonoBehaviour
             float newSize = useScroller ? scroller.charsPrinted * expansionRate : elapsed * expansionRate * 100;
             self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(newSize + offset, minSize, maxSize));
             yield return null;
-            elapsed += Time.deltaTime;
+            //if (!GameManager.Instance.IsPaused)
+                elapsed += Time.deltaTime;
         }
     }
 }

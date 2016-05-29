@@ -1,6 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Xml.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using Definitions;
@@ -42,9 +42,23 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
+    public static event Definitions.Toggle Pause;
+    private bool isPaused = false;
+    public bool IsPaused { get { return isPaused; } }
+
     public static PageManager currentPM;
 
-    private bool controlsEnabled = false;
+    private bool controlsEnabled = false, buffer;
+
+    void OnEnable()
+    {
+        Pause += HandlePause;
+    }
+
+    void OnDisable()
+    {
+        Pause -= HandlePause;
+    }
 
     void Awake()
     {
@@ -117,7 +131,22 @@ public class GameManager : MonoBehaviour
         //    GameState.Reset();
         //    resetGameState = false;
         //}
+
 	}
+
+    void HandlePause(bool toggle)
+    {
+        if (toggle)
+        {
+            buffer = controlsEnabled;
+            ToggleControls(false);
+        }
+        else
+            ToggleControls(buffer);
+        
+        Time.timeScale = toggle ? 0 : 1;
+        isPaused = toggle;
+    }
 
     public bool ToggleControls(bool enable)
     {
@@ -137,7 +166,12 @@ public class GameManager : MonoBehaviour
 
     public void Centre()
     {
-        // Obliterate saves
+        //ObliterateSaves();
+        Pause(!isPaused);
+    }
+
+    void ObliterateSaves()
+    {
         Persistor.Clear();
     }
 }

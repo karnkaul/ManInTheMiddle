@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Definitions
 {
     public delegate void Void();
+    public delegate void Toggle(bool toggle);
     public enum Choice { None, Left, Right };
     public enum DebugLevel { None, Notify, Verbose };
 
