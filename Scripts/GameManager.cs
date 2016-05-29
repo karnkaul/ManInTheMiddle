@@ -118,6 +118,17 @@ public class GameManager : MonoBehaviour
 	void Update ()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
+            Exit();
+        //if (resetGameState)
+        //{
+        //    GameState.Reset();
+        //    resetGameState = false;
+        //}
+
+	}
+
+    public void Exit()
+    {
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -126,13 +137,7 @@ public class GameManager : MonoBehaviour
 #endif
         }
 
-        //if (resetGameState)
-        //{
-        //    GameState.Reset();
-        //    resetGameState = false;
-        //}
-
-	}
+    }
 
     void HandlePause(bool toggle)
     {
@@ -170,7 +175,7 @@ public class GameManager : MonoBehaviour
         Pause(!isPaused);
     }
 
-    void ObliterateSaves()
+    public void ObliterateSaves()
     {
         Persistor.Clear();
     }
