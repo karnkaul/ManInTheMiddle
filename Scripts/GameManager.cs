@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     public static PageManager currentPM;
 
-    private bool controlsEnabled = false;
+    private bool controlsEnabled = false, buffer;
 
     void OnEnable()
     {
@@ -136,6 +136,14 @@ public class GameManager : MonoBehaviour
 
     void HandlePause(bool toggle)
     {
+        if (toggle)
+        {
+            buffer = controlsEnabled;
+            ToggleControls(false);
+        }
+        else
+            ToggleControls(buffer);
+        
         Time.timeScale = toggle ? 0 : 1;
         isPaused = toggle;
     }
