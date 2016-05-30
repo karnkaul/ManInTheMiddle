@@ -68,7 +68,7 @@ public class RectResizer : MonoBehaviour
             float newSize = useScroller ? scroller.charsPrinted * expansionRate : elapsed * expansionRate * 100;
             self.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Clamp(newSize + offset, minSize, maxSize));
             yield return null;
-            //if (!GameManager.Instance.IsPaused)
+            if (!GameManager.Instance.IsPaused)
                 elapsed += Time.deltaTime;
         }
     }
