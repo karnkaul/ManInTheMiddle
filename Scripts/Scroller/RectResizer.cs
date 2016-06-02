@@ -9,7 +9,7 @@ public class RectResizer : MonoBehaviour
     public float minSize;
     public float maxSize, offset;
     [Range(1, 5)]
-    public float expansionRate = 2.5f, colliderWait = 4, buffer;
+    public float expansionRate = 2.5f, colliderWait = 4;
     public float initWait;
     public float runFor = 10;
     public bool useScroller = false;
@@ -57,7 +57,7 @@ public class RectResizer : MonoBehaviour
         if (!useScroller)
         {
             contentText = GetComponentInChildren<Text>();
-            maxSize =  (contentText.text.Length * 4) + offset;
+            maxSize =  (contentText.text.Length * 5) + offset;
             if (maxSize < minSize) maxSize = minSize;
         }
 
