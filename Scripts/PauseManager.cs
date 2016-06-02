@@ -7,12 +7,28 @@ public class PauseManager : MonoBehaviour
     [SerializeField]
     private float speed = 5;
 
+    [SerializeField]
+    private Canvas confirm;
+
+    [SerializeField]
+    private AudioClip alert;
+
     private bool isEnabled = false;
     public bool IsEnabled { get { return isEnabled; } }
 
     public AudioMixerSnapshot paused, unpaused;
 
+    private AudioSource self;
+
     private Coroutine expand, contract;
+
+    void Start()
+    {
+        if (!confirm)
+            confirm = transform.Find("Confirm Canvas").GetComponent<Canvas>();
+        self = GetComponent<AudioSource>();
+        Return();
+    }
 
     void OnEnable()
     {
@@ -27,6 +43,18 @@ public class PauseManager : MonoBehaviour
     public void Mute()
     {
         //
+    }
+
+    public void AttemptRestart()
+    {
+        if (self && alert)
+            self.PlayOneShot(alert);
+        confirm.enabled = true;
+    }
+
+    public void Return()
+    {
+        confirm.enabled = false;
     }
 
     public void Restart()
