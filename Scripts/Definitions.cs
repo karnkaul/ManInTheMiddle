@@ -81,7 +81,7 @@ namespace Definitions
             {
                 File.Delete(path);
 
-                if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+                if (GameManager.Instance && GameManager.Instance.DebugLevel >= DebugLevel.Notify)
                     Debug.Log("Checkpoint file deleted.");
                 return;
             }
@@ -90,10 +90,10 @@ namespace Definitions
 
         static void Log(Checkpoint checkpoint, string action)
         {
-            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+            if (GameManager.Instance && GameManager.Instance.DebugLevel >= DebugLevel.Notify)
                 Debug.Log("Checkpoint " + checkpoint + " " + action + ".");
 
-            if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
+            if (GameManager.Instance && GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
                 foreach (Page page in checkpoint.allPages)
                     Debug.Log(page.number + " choice: " + page.playerChoice);
         }
@@ -117,7 +117,7 @@ namespace Definitions
             pages = new List<Page>();
             previousPage = new Page();
 
-            if (GameManager.Instance.DebugLevel >= DebugLevel.Notify)
+            if (GameManager.Instance && GameManager.Instance.DebugLevel >= DebugLevel.Notify)
                 Debug.Log("GameState reset.");
         }
     }

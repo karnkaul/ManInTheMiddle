@@ -9,7 +9,7 @@ public class PageManager : MonoBehaviour
     [SerializeField]
     private int pageNumber;
     public int PageNumber { get { return pageNumber; } }
-    [SerializeField]
+    [SerializeField][Tooltip("Use with autoSwapMusic for seamless audio experience.")]
     private bool checkpoint = false;
     //[SerializeField] 
     //[Tooltip("Use this to branch to a different Line. Provide scene names.")]

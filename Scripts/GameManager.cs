@@ -178,5 +178,7 @@ public class GameManager : MonoBehaviour
     public void ObliterateSaves()
     {
         Persistor.Clear();
+        SceneManager.LoadScene(0);
+        Pause(false);
     }
 }
