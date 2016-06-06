@@ -42,13 +42,15 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
-    public static event Definitions.Toggle Pause;
+    public static Definitions.Toggle Pause;
     private bool isPaused = false;
     public bool IsPaused { get { return isPaused; } }
 
     public static PageManager currentPM;
 
-    private bool controlsEnabled = false, buffer;
+    [HideInInspector]
+    public bool controlsEnabled = false;
+    private bool buffer;
 
     void OnEnable()
     {
@@ -87,24 +89,39 @@ public class GameManager : MonoBehaviour
 
     }
 
-	void Start ()
-    {
-        // Load last checkpoint
-        if (loadCheckpoint)
-        {
-            Checkpoint checkpoint = Persistor.Load();
-            if (checkpoint != null)
-                SceneManager.LoadScene(checkpoint.sceneName);
-            else
-                Debug.Log("Checkpoint file not found.");
-        }
+	//void Start ()
+ //   {
+ //       // Load last checkpoint
+ //       if (loadCheckpoint)
+ //       {
+ //           Checkpoint checkpoint = Persistor.Load();
+ //           if (checkpoint != null)
+ //               SceneManager.LoadScene(checkpoint.sceneName);
+ //           else
+ //               Debug.Log("Checkpoint file not found.");
+ //       }
 
-        StartCoroutine(PMPreload());
+ //       StartCoroutine(PMPreload());
+ //   }
+
+ //   void OnLevelWasLoaded(int level)
+ //   {
+ //       StartCoroutine(PMPreload());
+ //   }
+
+    void Start()
+    {
+        if (loadCheckpoint)
+            LoadCheckpointScene();
     }
 
-    void OnLevelWasLoaded(int level)
+    public void LoadCheckpointScene()
     {
-        StartCoroutine(PMPreload());
+        Checkpoint checkpoint = Persistor.Load();
+        if (checkpoint != null)
+            SceneManager.LoadScene(checkpoint.sceneName);
+        else
+            Debug.Log("Checkpoint file not found.");
     }
 
     IEnumerator PMPreload()
@@ -141,23 +158,23 @@ public class GameManager : MonoBehaviour
 
     void HandlePause(bool toggle)
     {
-        if (toggle)
-        {
-            buffer = controlsEnabled;
-            ToggleControls(false);
-        }
-        else
-            ToggleControls(buffer);
+        //if (toggle)
+        //{
+        //    buffer = controlsEnabled;
+        //    ToggleControls(false);
+        //}
+        //else
+        //    ToggleControls(buffer);
         
         Time.timeScale = toggle ? 0 : 1;
         isPaused = toggle;
     }
 
-    public bool ToggleControls(bool enable)
+    public void EnableControls()
     {
-        controlsEnabled = enable;
-        FindObjectOfType<ControlsManager>().Toggle(enable);
-        return controlsEnabled;
+        controlsEnabled = true;
+        FindObjectOfType<ControlsManager>().Toggle(true);
+        //return controlsEnabled;
     }
 
     public void PlayerChose(Choice playerChoice)
@@ -178,7 +195,7 @@ public class GameManager : MonoBehaviour
     public void ObliterateSaves()
     {
         Persistor.Clear();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
         Pause(false);
     }
 }

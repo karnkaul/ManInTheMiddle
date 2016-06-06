@@ -19,7 +19,8 @@ public class ControlsEnabler : MonoBehaviour
         {
             if (GameManager.Instance.DebugLevel >= Definitions.DebugLevel.Notify)
                 Debug.Log("Collider enabling controls.");
-            controlsEnabled = GameManager.Instance.ToggleControls(true);
+            GameManager.Instance.EnableControls();
+            controlsEnabled = true;
         }
     }
 }

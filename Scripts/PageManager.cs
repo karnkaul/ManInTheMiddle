@@ -67,7 +67,8 @@ public class PageManager : MonoBehaviour
         //if (pageNumber == 1)
         //    GameState.Reset();
 
-        GameManager.Instance.ToggleControls(false);
+        //GameManager.Instance.ToggleControls(false);
+        FindObjectOfType<ControlsManager>().Toggle(false);
         if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
             Debug.Log("Interface disabling controls.");
         GameManager.currentPM = this;
@@ -102,7 +103,7 @@ public class PageManager : MonoBehaviour
 
     void AutoEnableControls()
     {
-        GameManager.Instance.ToggleControls(true);
+        GameManager.Instance.EnableControls();
         if (GameManager.Instance.DebugLevel >= DebugLevel.Verbose)
             Debug.Log("Auto enabling controls (" + GameManager.Instance.Autoenable + " s passed.");
     }

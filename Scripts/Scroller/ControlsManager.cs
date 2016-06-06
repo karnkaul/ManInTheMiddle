@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using Definitions;
 
 public class ControlsManager : MonoBehaviour
@@ -10,6 +11,28 @@ public class ControlsManager : MonoBehaviour
     public AudioClip pauseClip;
 
     private AudioSource self;
+    private bool controlsEnabled = false;
+    private List<bool> initButtonState = new List<bool>();
+
+    void OnEnable()
+    {
+        GameManager.Pause += HandlePause;
+    }
+
+    void OnDisable()
+    {
+        GameManager.Pause -= HandlePause;
+    }
+
+    void Start()
+    {
+        foreach (Button button in buttons)
+        {
+            initButtonState.Add(button.interactable);
+            button.interactable = false;
+            Debug.Log(button.interactable + " ");
+        }
+    }
 
     float PlaySFX(bool pause = false)
     {
@@ -60,12 +83,29 @@ public class ControlsManager : MonoBehaviour
     {
         //Button[] buttons = GetComponentsInChildren<Button>();
         //Image[] images = GetComponentsInChildren<Image>();
-        foreach (Button button in buttons)
+        if (GameManager.Instance.controlsEnabled)
         {
-            button.interactable = enable;
-            Image image = button.GetComponent<Image>();
-            Color color = image.color;
-            image.color = new Color(color.r, color.g, color.b, enable ? 1 : 0);
+            int index = 0;
+            foreach (Button button in buttons)
+            {
+                if (!enable)
+                {
+                    //buttonPrevState[index++] = button.interactable;
+                    button.interactable = enable;
+                }
+                else
+                {
+                    button.interactable = initButtonState[index++];
+                }
+                //Image image = button.GetComponent<Image>();
+                //Color color = image.color;
+                //image.color = new Color(color.r, color.g, color.b, enable ? 1 : 0);
+            }
         }
+    }
+
+    public void HandlePause(bool pause)
+    {
+        Toggle(!pause);
     }
 }
