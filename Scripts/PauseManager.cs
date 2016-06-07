@@ -64,6 +64,7 @@ public class PauseManager : MonoBehaviour
 
     public void Restart()
     {
+        GameManager.Pause(false);
         GameManager.Instance.ObliterateSaves();
     }
 	
