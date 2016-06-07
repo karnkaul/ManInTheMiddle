@@ -66,7 +66,7 @@ public class PauseManager : MonoBehaviour
 	
     public void Exit()
     {
-        HandlePause(false);
+        GameManager.Pause(false);
         GameManager.Instance.LoadMainMenu();
     }
 
