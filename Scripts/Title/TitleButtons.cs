@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TitleButtons : MonoBehaviour
 {
-    public AudioClip alert;
+    public AudioClip alert, click;
 
     private AudioSource self;
 
@@ -19,6 +19,14 @@ public class TitleButtons : MonoBehaviour
 
     public void Load()
     {
+        StartCoroutine(_Load());
+    }
+
+    IEnumerator _Load()
+    {
+        if (self && click)
+            self.PlayOneShot(click);
+        yield return new WaitForSeconds(click.length);
         GameManager.Instance.LoadCheckpointScene();
     }
 

@@ -57,7 +57,7 @@ public class RectResizer : MonoBehaviour
         if (!useScroller)
         {
             contentText = GetComponentInChildren<Text>();
-            maxSize =  (contentText.text.Length * 5) + offset;
+            maxSize =  (contentText.text.Length * 4.3f) + offset;
             if (maxSize < minSize) maxSize = minSize;
         }
 

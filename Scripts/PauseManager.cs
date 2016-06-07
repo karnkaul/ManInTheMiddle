@@ -11,7 +11,7 @@ public class PauseManager : MonoBehaviour
     private Canvas confirm;
 
     [SerializeField]
-    private AudioClip alert;
+    private AudioClip alert, back, general;
 
     private bool isEnabled = false;
     public bool IsEnabled { get { return isEnabled; } }
@@ -27,7 +27,7 @@ public class PauseManager : MonoBehaviour
         if (!confirm)
             confirm = transform.Find("Confirm Canvas").GetComponent<Canvas>();
         self = GetComponent<AudioSource>();
-        Return();
+        Return(false);
     }
 
     void OnEnable()
@@ -52,8 +52,10 @@ public class PauseManager : MonoBehaviour
         confirm.enabled = true;
     }
 
-    public void Return()
+    public void Return(bool playSound=true)
     {
+        if(playSound)
+            self.PlayOneShot(back);
         confirm.enabled = false;
     }
 
@@ -64,7 +66,8 @@ public class PauseManager : MonoBehaviour
 	
     public void Exit()
     {
-        GameManager.Instance.Exit();
+        //GameManager.Instance.Exit();
+        GameManager.Instance.LoadMainMenu();
     }
 
     public void HandlePause(bool toggle)

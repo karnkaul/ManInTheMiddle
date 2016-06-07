@@ -124,6 +124,11 @@ public class GameManager : MonoBehaviour
             Debug.Log("Checkpoint file not found.");
     }
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     IEnumerator PMPreload()
     {
         if (debugLevel >= DebugLevel.Notify)

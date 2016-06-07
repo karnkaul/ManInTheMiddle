@@ -30,7 +30,6 @@ public class ControlsManager : MonoBehaviour
         {
             initButtonState.Add(button.interactable);
             button.interactable = false;
-            Debug.Log(button.interactable + " ");
         }
     }
 
@@ -102,9 +101,10 @@ public class ControlsManager : MonoBehaviour
                 //image.color = new Color(color.r, color.g, color.b, enable ? 1 : 0);
             }
         }
+        Debug.Log("Toggle controls called.");
     }
 
-    public void HandlePause(bool pause)
+    void HandlePause(bool pause)
     {
         Toggle(!pause);
     }
