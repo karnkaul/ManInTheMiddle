@@ -101,7 +101,6 @@ public class ControlsManager : MonoBehaviour
                 //image.color = new Color(color.r, color.g, color.b, enable ? 1 : 0);
             }
         }
-        Debug.Log("Toggle controls called.");
     }
 
     void HandlePause(bool pause)
