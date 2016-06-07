@@ -24,7 +24,7 @@ public class ControlsManager : MonoBehaviour
         GameManager.Pause -= HandlePause;
     }
 
-    void Start()
+    void Awake()
     {
         foreach (Button button in buttons)
         {

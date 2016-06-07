@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
     private int autoEnable = 10;
     public int Autoenable { get { return autoEnable; } }
 
+    [SerializeField]
+    private AudioClip restart;
+
     [Header("Debug")]
     [SerializeField]
     private DebugLevel debugLevel = 0;
@@ -51,6 +54,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool controlsEnabled = false;
     private bool buffer;
+
+    private AudioSource self;
 
     void OnEnable()
     {
@@ -86,7 +91,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
 
-
+        self = GetComponent<AudioSource>();
     }
 
 	//void Start ()
@@ -199,7 +204,17 @@ public class GameManager : MonoBehaviour
 
     public void ObliterateSaves()
     {
+        StartCoroutine(_ObliterateSaves());
+    }
+
+    IEnumerator _ObliterateSaves()
+    {
         Persistor.Clear();
+        if (self && restart)
+        {
+            self.PlayOneShot(restart);
+            yield return new WaitForSeconds(restart.length);
+        }
         SceneManager.LoadScene(1);
         Pause(false);
     }
