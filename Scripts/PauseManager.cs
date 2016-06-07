@@ -13,6 +13,9 @@ public class PauseManager : MonoBehaviour
     [SerializeField]
     private AudioClip alert, back, general;
 
+    [SerializeField]
+    private CanvasGroup pauseFader;
+
     private bool isEnabled = false;
     public bool IsEnabled { get { return isEnabled; } }
 
@@ -101,16 +104,20 @@ public class PauseManager : MonoBehaviour
     {
         RectTransform self = GetComponent<RectTransform>();
         self.localScale = Vector3.zero;
-        float coefficient = Time.unscaledDeltaTime * speed;
+        float coefficient;
 
         while (self.localScale.x < 1.2f)
         {
+            coefficient = Time.unscaledDeltaTime * speed;
             self.localScale += new Vector3(coefficient, coefficient, 1);
+            if (pauseFader)
+                pauseFader.alpha += 0.03f;
             yield return null; 
         }
 
         while (self.localScale.x > 1)
         {
+            coefficient = Time.unscaledDeltaTime * speed;
             self.localScale -= new Vector3(coefficient, coefficient, 1);
             yield return null;
         }
@@ -125,8 +132,12 @@ public class PauseManager : MonoBehaviour
         while (self.localScale.x > 0)
         {
             self.localScale -= new Vector3(coefficient, coefficient, 1);
+            if (pauseFader)
+                pauseFader.alpha -= 0.03f;
             yield return null;
         }
+        if (pauseFader)
+            pauseFader.alpha = 0;
         self.localScale = Vector3.zero;
     }
 }
