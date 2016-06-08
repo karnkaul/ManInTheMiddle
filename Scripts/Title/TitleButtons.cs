@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class TitleButtons : MonoBehaviour
@@ -45,5 +46,10 @@ public class TitleButtons : MonoBehaviour
         }
         else
             GameManager.Instance.ObliterateSaves();
+    }
+
+    public void Credits()
+    {
+        SceneManager.LoadScene("Credits");
     }
 }
