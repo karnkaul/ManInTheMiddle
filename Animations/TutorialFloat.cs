@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class TutorialFloat : MonoBehaviour
 {
     [SerializeField]
-    private float speed = 10, idleWait=7, animateFor=2;
+    private float speed = 10, idleWait=7, animateFor=2, coefficient = 0.05f;
 
     public enum AnimState { Idle, Floating };
     [SerializeField][Header("Status")]
@@ -37,7 +37,7 @@ public class TutorialFloat : MonoBehaviour
         }
         else if (elapsed > (idleWait + animateFor))
         {
-            if (Mathf.Abs(transform.localScale.x - 1) + Mathf.Abs(transform.localScale.y - 1) <= 0.06f)
+            if (Mathf.Abs(transform.localScale.x - 1) + Mathf.Abs(transform.localScale.y - 1) <= coefficient * 1.1f)
             {
                 transform.localScale = Vector3.one;
                 elapsed = 0;
@@ -51,8 +51,8 @@ public class TutorialFloat : MonoBehaviour
 
     void Animate()
     {
-        float x = 1 + 0.05f * Mathf.Sin(Time.unscaledTime * speed);
-        float y = 1 + 0.05f * Mathf.Cos(Time.unscaledTime * speed);
+        float x = 1 + coefficient * Mathf.Sin(Time.unscaledTime * speed);
+        float y = 1 + coefficient * Mathf.Cos(Time.unscaledTime * speed);
         transform.localScale = new Vector3(x, y, 1);
     }
 
