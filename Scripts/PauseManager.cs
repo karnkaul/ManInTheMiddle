@@ -113,7 +113,18 @@ public class PauseManager : MonoBehaviour
 	
     public void Exit()
     {
+        StartCoroutine(_Exit());
+    }
+
+    IEnumerator _Exit()
+    {
         GameManager.Pause(false);
+        if (self && general)
+        {
+            self.PlayOneShot(general);
+            yield return new WaitForSeconds(general.length);
+        }
+        yield return null;
         GameManager.Instance.LoadMainMenu();
     }
 

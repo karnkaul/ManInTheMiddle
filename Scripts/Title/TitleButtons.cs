@@ -50,6 +50,17 @@ public class TitleButtons : MonoBehaviour
 
     public void Credits()
     {
+        StartCoroutine(_Credits());
+    }
+
+    IEnumerator _Credits()
+    {
+        if (self && alert)
+        {
+            self.PlayOneShot(click);
+            yield return new WaitForSeconds(click.length);
+        }
+        yield return null;
         SceneManager.LoadScene("Credits");
     }
 }
