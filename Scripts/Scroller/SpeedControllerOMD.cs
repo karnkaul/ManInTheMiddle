@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SpeedControllerOMD : MonoBehaviour
 {
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
     public void OnMouseDown()
     {
         if (!GameManager.Instance.IsPaused)
